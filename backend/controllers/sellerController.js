@@ -23,7 +23,7 @@ const addSeller = async (req, res) => {
 
         // Create a new seller in the database
         const seller = await Seller.create(info);
-        res.status(201).send(seller);  
+        res.status(201).send({ message: "register sucessfully! ", seller});  
     } catch (error) {
         console.error("Error: ", error);
         res.status(500).send({ message: "Error registering seller" });

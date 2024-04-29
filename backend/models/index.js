@@ -18,6 +18,7 @@ const sequelize = new Sequelize(
     }
 )
 
+//method is called to test the database connection. 
 sequelize.authenticate()
 .then(()=> {
     console.log('connected..')

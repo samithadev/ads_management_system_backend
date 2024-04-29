@@ -18,7 +18,7 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: false
         },
         image: {
-            type: DataTypes.STRING, // Store the path to the image file
+            type: DataTypes.STRING, 
             allowNull: false
         },
         price: {
@@ -48,7 +48,7 @@ module.exports = (sequelize, DataTypes) => {
     Advertisement.associate = models => {
         Advertisement.belongsTo(models.Seller, {
             foreignKey: 'sellerId',
-            onDelete: 'CASCADE'
+            onDelete: 'CASCADE' 
         });
     };
 

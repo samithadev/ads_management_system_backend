@@ -90,6 +90,8 @@ const updateAdvertisement = async (req, res) => {
 
     try{
         const adId = req.params.id;
+        const { topic, description, category, price, city, telephoneNo } = req.body;
+        const image = req.file.filename;
 
         const advertisement = await Advertisement.findByPk(adId);
 
@@ -97,7 +99,9 @@ const updateAdvertisement = async (req, res) => {
             return res.status(404).json({ message: "Advertisement not found" });
         }
 
-        await advertisement.update(req.body)
+        info = {topic, description, category,image, price, city, telephoneNo}
+
+        await advertisement.update(info)
 
          res.status(200).json({message: "Advertisement updated! "});
     }catch (error) {

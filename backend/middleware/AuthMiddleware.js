@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken');
 
+//check user login or not using jwt token
 const validateToken = (req, res, next) => {
 
     const token = req.headers.authorization.split(" ")[1];
