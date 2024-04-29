@@ -37,8 +37,8 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.INTEGER,
             allowNull: false,
             references: {
-                model: 'Seller', // This is the name of the model
-                key: 'id'       // This is the name of the column
+                model: 'sellers', // This is the name of the model
+                key: 'sellerId'       // This is the name of the column
             }
         }
     } , {
