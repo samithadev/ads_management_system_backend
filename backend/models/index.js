@@ -39,4 +39,15 @@ db.sequelize.sync({force:false}) //when true run application all data will loose
     console.log('yes re-sync done!')
 })
 
+//seller and advertisement 1:M relation
+db.sellers.hasMany(db.advertisements, {
+    foreignKey: 'sellerId',
+    as:'advertisement'
+})
+
+db.advertisements.belongsTo(db.sellers, {
+    foreignKey: 'sellerId',
+    as:'seller'
+})
+
 module.exports = db;

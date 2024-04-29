@@ -1,6 +1,7 @@
 const { where } = require('sequelize')
 const db = require('../models')
 const jwt = require('jsonwebtoken')
+require('dotenv').config();
 
 //create main model
 const Seller = db.sellers
@@ -41,15 +42,14 @@ const loginSeller= async (req,res) => {
         }
 
         //validate password
-        const isValidPassword = await compare(password, seller.password)
-        if(!isValidPassword){
-            return res.status(401).json({message: "invalid password! "})
+        if (password !== seller.password) {
+            return res.status(401).json({ message: "Invalid password!" });
         }
 
         //create JWT token
         const token = jwt.sign({sellerId: seller.sellerId}, process.env.JWT_SECRET_KEY, {expiresIn:'3h'})
 
-        res.status(200).json({message:"Login Successful! " + token})
+        res.status(200).json({message:"Login Successful! ", token})
     }catch(error){
         console.log(error);
         res.status(500).json({message: "Internal server error! "})

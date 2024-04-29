@@ -7,8 +7,11 @@ app.use(express.json())
 app.use(express.urlencoded({extended:true}))
 
 //routers
-const router = require('./routes/sellerRouter.js')
-app.use('/api/seller', router)
+const routerSeller = require('./routes/sellerRouter.js')
+app.use('/api/seller', routerSeller)
+
+const routerAd = require('./routes/adRouter.js')
+app.use('/api/ad', routerAd)
 
 //test api
 app.get('/', (req,res) => {
