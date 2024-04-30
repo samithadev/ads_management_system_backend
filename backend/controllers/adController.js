@@ -49,6 +49,33 @@ const createAdvertisement = async (req, res) => {
     }
 };
 
+// Fetch advertisements by a specific seller
+const getAdvertisementsBySeller = async (req, res) => {
+    try {
+        const sellerId = req.params.sellerId; 
+        const page = parseInt(req.query.page, 10) || 1;
+        const pageSize = parseInt(req.query.pageSize, 10) || 10;
+
+        // Check if seller exists
+        const seller = await Seller.findByPk(sellerId);
+        if (!seller) {
+            return res.status(404).json({ message: "Seller not found" });
+        }
+
+        const advertisements = await Advertisement.findAll({
+            where: { sellerId: sellerId },
+            order: [['createdAt', 'DESC']],
+            offset: (page - 1) * pageSize,
+            limit: pageSize
+        });
+
+        res.status(200).json(advertisements);
+    } catch (error) {
+        console.error("Error fetching advertisements for seller:", error);
+        res.status(500).json({ message: "Internal server error" });
+    }
+};
+
 //fetch advertisements with pagination & order
 const getAdvertisements = async (req, res) => {
     try {
@@ -135,6 +162,7 @@ const deleteAdvertisement = async (req, res) => {
 module.exports = {
     createAdvertisement,
     getAdvertisements,
+    getAdvertisementsBySeller,
     getSingleAdvertisement,
     updateAdvertisement,
     deleteAdvertisement

@@ -8,6 +8,8 @@ router.post('/createAd',AuthMiddleware, upload.single('image'), adController.cre
 
 router.get('/allAds', adController.getAdvertisements)
 
+router.get('/seller/:sellerId',AuthMiddleware, adController.getAdvertisementsBySeller)
+
 router.get('/getSingleAd/:id', adController.getSingleAdvertisement)
 
 router.put('/updateAd/:id',AuthMiddleware, upload.single('image'), adController.updateAdvertisement)
