@@ -3,6 +3,8 @@ const db = require('../models')
 const jwt = require('jsonwebtoken')
 require('dotenv').config();
 
+const bcrypt = require('bcrypt');
+
 //create main model
 const Seller = db.sellers
 
@@ -19,7 +21,10 @@ const addSeller = async (req, res) => {
             return res.status(400).send({ message: "All fields are required" });
         }
 
-        const info = { name, email, contact, password };
+        // Hash the password
+        const hashedPassword = await bcrypt.hash(password, 10); // 10 is the saltRounds
+
+        const info = { name, email, contact, password:hashedPassword };
 
         // Create a new seller in the database
         const seller = await Seller.create(info);
@@ -41,8 +46,9 @@ const loginSeller= async (req,res) => {
             return res.status(404).json({message: "Seller not found!"})
         }
 
-        //validate password
-        if (password !== seller.password) {
+        // Validate password
+        const passwordMatch = await bcrypt.compare(password, seller.password);
+        if (!passwordMatch) {
             return res.status(401).json({ message: "Invalid password!" });
         }
 
