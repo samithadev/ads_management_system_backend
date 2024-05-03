@@ -40,7 +40,12 @@ module.exports = (sequelize, DataTypes) => {
                 model: 'sellers', // This is the name of the model
                 key: 'sellerId'       // This is the name of the column
             }
+        },
+        isDeleted: {
+            type: DataTypes.BOOLEAN,
+            defaultValue: false // Default value is false, indicating not deleted
         }
+        
     } , {
         timestamps: true, // Adds createdAt and updatedAt timestamps
     } );

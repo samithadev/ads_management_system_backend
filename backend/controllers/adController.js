@@ -2,9 +2,6 @@ const { where, Model } = require("sequelize");
 const db = require("../models");
 const jwt = require("jsonwebtoken");
 
-const fs = require("fs");
-const fse = require("fs-extra");
-
 //create main model
 const Advertisement = db.advertisements;
 const Seller = db.sellers
@@ -56,8 +53,7 @@ const createAdvertisement = async (req, res) => {
 const getAdvertisementsBySeller = async (req, res) => {
     try {
         const sellerId = req.params.sellerId; 
-        const page = parseInt(req.query.page, 10) || 1;
-        const pageSize = parseInt(req.query.pageSize, 10) || 10;
+        const {page, pageSize} = req.body;
 
         // Check if seller exists
         const seller = await Seller.findByPk(sellerId);
@@ -66,7 +62,7 @@ const getAdvertisementsBySeller = async (req, res) => {
         }
 
         const advertisements = await Advertisement.findAll({
-            where: { sellerId: sellerId },
+            where: { sellerId: sellerId, isDeleted: false },
             order: [['createdAt', 'DESC']],
             offset: (page - 1) * pageSize,
             limit: pageSize
@@ -82,20 +78,33 @@ const getAdvertisementsBySeller = async (req, res) => {
 //fetch advertisements with pagination & order
 const getAdvertisements = async (req, res) => {
     try {
-        const page = parseInt(req.query.page, 10) || 1;
-        const pageSize = parseInt(req.query.pageSize, 10) || 10;
-        const sortBy = req.query.sortBy || 'createdAt'; // Default sort by createdAt
+        
+        const { page, pageSize, sortBy, category } = req.body;
 
         let order = [['createdAt', 'DESC']];
         if (sortBy === 'price') {
             order = [['price', 'ASC']];
         }
 
-        const advertisements = await Advertisement.findAll({
+         // query conditions
+         const queryConditions = {
+            where: { isDeleted: false },
             order,
             offset: (page - 1) * pageSize,
             limit: pageSize,
-        });
+        };
+
+        // filter category 
+        if (category) {
+            queryConditions.where.category = category;
+        }
+
+        const advertisements = await Advertisement.findAll(queryConditions);
+
+        // Check if there are no advertisements
+        if (advertisements.length === 0) {
+            return res.status(404).json({ message: "No advertisements found!" });
+        }
 
         res.status(200).json(advertisements);
     } catch (error) {
@@ -177,17 +186,8 @@ const deleteAdvertisement = async (req, res) => {
                 return res.status(403).json({ message: "You are not authorized to delete this advertisement" });
             }
 
-            // Backup advertisement data before deletion
-            const backupDir = "./backup";
-            if (!fs.existsSync(backupDir)) {
-                fs.mkdirSync(backupDir);
-            }
-
-            const backupPath = `${backupDir}/advertisement_${adId}.json`;
-            await fse.writeJson(backupPath, advertisement.toJSON());
-
-            //delete record
-            await advertisement.destroy();
+            // Update the isDeleted flag to true
+            await advertisement.update({ isDeleted: true });
 
             res.status(200).json({ message: "Advertisement deleted successfully" });
         }catch (error) {

@@ -6,9 +6,9 @@ const router = require('express').Router()
 
 router.post('/createAd',AuthMiddleware, upload.single('image'), adController.createAdvertisement)
 
-router.get('/allAds', adController.getAdvertisements)
+router.post('/allAds', adController.getAdvertisements)
 
-router.get('/seller/:sellerId',AuthMiddleware, adController.getAdvertisementsBySeller)
+router.post('/seller/:sellerId',AuthMiddleware, adController.getAdvertisementsBySeller)
 
 router.get('/getSingleAd/:id', adController.getSingleAdvertisement)
 
