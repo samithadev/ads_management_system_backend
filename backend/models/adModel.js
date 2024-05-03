@@ -37,13 +37,13 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.INTEGER,
             allowNull: false,
             references: {
-                model: 'sellers', // This is the name of the model
-                key: 'sellerId'       // This is the name of the column
+                model: 'sellers', // name of the model
+                key: 'sellerId'       // name of the column
             }
         },
         isDeleted: {
             type: DataTypes.BOOLEAN,
-            defaultValue: false // Default value is false, indicating not deleted
+            defaultValue: false // indicating not deleted
         }
         
     } , {
