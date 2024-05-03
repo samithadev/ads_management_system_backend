@@ -14,6 +14,6 @@ router.get('/getSingleAd/:id', adController.getSingleAdvertisement)
 
 router.put('/updateAd/:id',AuthMiddleware, upload.single('image'), adController.updateAdvertisement)
 
-router.delete('/deleteAd/:id', AuthMiddleware, adController.deleteAdvertisement)
+router.put('/deleteAd/:id', AuthMiddleware, adController.deleteAdvertisement)
 
 module.exports = router
