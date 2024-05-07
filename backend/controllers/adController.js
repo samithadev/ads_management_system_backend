@@ -81,7 +81,7 @@ const getAdvertisements = async (req, res) => {
         
         const { page, pageSize, sortBy, category } = req.body;
 
-        let order = [['createdAt', 'DESC']];
+        let order = [['createdAt', 'DESC']];//default
         if (sortBy === 'price') {
             order = [['price', 'ASC']];
         }
